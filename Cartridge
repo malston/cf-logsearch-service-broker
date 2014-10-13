@@ -1,0 +1,5 @@
+github.com/cloudfoundry-incubator/cf-lager origin/master
+github.com/dchest/uniuri origin/master
+github.com/garyburd/redigo/redis origin/master
+
+
