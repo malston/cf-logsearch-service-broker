@@ -1,6 +1,6 @@
 # cf-logsearch-broker 
 
-A [Cloud Foundry](http://docs.cloudfoundry.org/services/api.html) Service Broker for [Logsearch](http://www.logsearch.io/).
+A [Cloud Foundry](http://docs.cloudfoundry.org/services/api.html) service broker for [Logsearch](http://www.logsearch.io/).
 
 ## Install
 
