@@ -7,7 +7,7 @@ import (
 	"github.com/cloudfoundry-incubator/cf-lager"
 
 	"github.com/malston/cf-logsearch-broker/api"
-	"github.com/malston/cf-logsearch-broker/logstash"
+	"github.com/malston/cf-logsearch-broker/logsearch/logstash"
 	"github.com/malston/cf-logsearch-broker/system"
 )
 
