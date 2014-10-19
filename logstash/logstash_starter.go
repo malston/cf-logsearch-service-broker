@@ -2,7 +2,6 @@ package logstash
 
 import (
 	"github.com/malston/cf-logsearch-broker/system"
-	"github.com/pivotal-golang/lager"
 )
 
 type Starter interface {
@@ -11,13 +10,11 @@ type Starter interface {
 
 type ProcessStarter struct {
 	commandRunner system.CommandRunner
-	logger        lager.Logger
 }
 
-func NewProcessStarter(commmandRunner system.CommandRunner, logger lager.Logger) ProcessStarter {
+func NewProcessStarter(commmandRunner system.CommandRunner) Starter {
 	return ProcessStarter{
 		commandRunner: commmandRunner,
-		logger:        logger,
 	}
 }
 

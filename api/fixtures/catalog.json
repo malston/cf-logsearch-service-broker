@@ -1,0 +1,38 @@
+{
+  "services": [
+    {
+      "id": "124b3b9f-89b5-4ee0-b299-850a47c4a30d",
+      "name": "p-logsearch-dev",
+      "description": "Logsearch Service for Cloud Foundry v2",
+      "bindable": true,
+      "plans": [
+        {
+          "id": "dc851bfa-b23c-4e07-ae4d-26a5c403ce97",
+          "name": "default",
+          "description": "The default Logsearch plan",
+          "metadata": {
+            "bullets": [],
+            "displayName": "Logsearch"
+          }
+        }
+      ],
+      "metadata": {
+        "displayName": "Logsearch",
+        "longDescription": "Logsearch is open source software from City Index used to search logs using the power of ELK",
+        "documentationUrl": "http://documentation.com",
+        "supportUrl": "http://support.com",
+        "listing": {
+          "blurb": "Logsearch ...",
+          "imageUrl": "http://image.com/image.png"
+        },
+        "provider": {
+          "name": "Logsearch.io"
+        }
+      },
+      "tags": [
+        "logging",
+        "logsearch"
+      ]
+    }
+  ]
+}
