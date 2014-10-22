@@ -1,8 +1,10 @@
 package api_test
 
 import (
-	. "github.com/malston/cf-logsearch-broker/api"
+	"net/http"
+	"os"
 
+	. "github.com/malston/cf-logsearch-broker/api"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -15,9 +17,14 @@ func (fsb *FakeServiceBroker) Services() []Service {
 	return []Service{
 		Service{
 			ID:          "124b3b9f-89b5-4ee0-b299-850a47c4a30d",
-			Name:        "p-logsearch-dev",
+			Name:        "logsearch-service",
 			Description: "Logsearch Service for Cloud Foundry v2",
 			Bindable:    true,
+			DashboardClient: ServiceDashboardClient{
+				ID:          "logsearch-service-client",
+				Secret:      "s3cr3t",
+				RedirectUri: "https://dashboard.com",
+			},
 			Plans: []ServicePlan{
 				ServicePlan{
 					ID:          "dc851bfa-b23c-4e07-ae4d-26a5c403ce97",
@@ -55,17 +62,29 @@ var _ = Describe("service broker api", func() {
 		fakeServiceBroker *FakeServiceBroker
 	)
 	Describe("fetching catalog", func() {
+		BeforeEach(func() {
+			fakeServiceBroker = &FakeServiceBroker{}
+			os.Setenv("LOGSEARCH_BROKER_USERNAME", "username")
+			os.Setenv("LOGSEARCH_BROKER_PASSWORD", "password")
+		})
+		AfterEach(func() {
+			os.Setenv("LOGSEARCH_BROKER_USERNAME", "")
+			os.Setenv("LOGSEARCH_BROKER_PASSWORD", "")
+		})
 		Context("when service is available", func() {
-			BeforeEach(func() {
-				fakeServiceBroker = &FakeServiceBroker{}
-			})
 			It("returns a 200 status code", func() {
-				Request("GET", "/v2/catalog", fakeServiceBroker)
+				response := AuthorizedRequest("GET", "/v2/catalog", fakeServiceBroker)
 				Expect(response.Code).To(Equal(200))
 			})
 			It("returns valid catalog json", func() {
-				Request("GET", "/v2/catalog", fakeServiceBroker)
+				response := AuthorizedRequest("GET", "/v2/catalog", fakeServiceBroker)
 				Expect(response.Body).To(MatchJSON(Fixture("catalog.json")))
+			})
+		})
+		Context("when credentials are wrong", func() {
+			It("returns a 401 status code", func() {
+				response := Request("GET", "/v2/catalog", "badusername", "badpassword", fakeServiceBroker)
+				Expect(response.Code).To(Equal(http.StatusUnauthorized))
 			})
 		})
 	})

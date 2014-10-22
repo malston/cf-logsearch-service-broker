@@ -34,8 +34,8 @@ func parseAuthzHeader(req *http.Request) string {
 }
 
 func createAuthzStringFromEnv() string {
-	username := os.Getenv("BROKER_USER")
-	password := os.Getenv("BROKER_PASSWORD")
+	username := os.Getenv("LOGSEARCH_BROKER_USERNAME")
+	password := os.Getenv("LOGSEARCH_BROKER_PASSWORD")
 	data := []byte(username + ":" + password)
 	return "basic " + base64.StdEncoding.EncodeToString(data)
 }

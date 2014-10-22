@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/codegangsta/martini"
-	// "github.com/malston/cf-logsearch-broker/api/handlers"
+	"github.com/malston/cf-logsearch-broker/api/handlers"
 	"github.com/martini-contrib/render"
 )
 
@@ -19,13 +19,20 @@ type ServiceBroker interface {
 }
 
 type Service struct {
-	ID          string          `json:"id"`
-	Name        string          `json:"name"`
-	Description string          `json:"description"`
-	Bindable    bool            `json:"bindable"`
-	Plans       []ServicePlan   `json:"plans"`
-	Metadata    ServiceMetadata `json:"metadata"`
-	Tags        []string        `json:"tags"`
+	ID              string                 `json:"id"`
+	Name            string                 `json:"name"`
+	Description     string                 `json:"description"`
+	Bindable        bool                   `json:"bindable"`
+	Plans           []ServicePlan          `json:"plans"`
+	Metadata        ServiceMetadata        `json:"metadata"`
+	Tags            []string               `json:"tags"`
+	DashboardClient ServiceDashboardClient `json:"dashboard_client"`
+}
+
+type ServiceDashboardClient struct {
+	ID          string `json:"id"`
+	Secret      string `json:"secret"`
+	RedirectUri string `json:"redirect_uri"`
 }
 
 type ServicePlan struct {
@@ -80,7 +87,7 @@ type BindingResponse struct {
 func New(serviceBroker ServiceBroker) *martini.ClassicMartini {
 	m := martini.Classic()
 	m.Handlers(
-		// handlers.HandleAuthCheck(),
+		handlers.HandleAuthCheck(),
 		render.Renderer(),
 	)
 
