@@ -1,6 +1,7 @@
 github.com/pivotal-golang/lager	a106931abed5afe3043eae8851be8b33a4bdfa3f
 github.com/cloudfoundry-incubator/cf-lager	94308c799cf61ac0818667ddcc25046c8c5659d1
-github.com/codegangsta/martini	7d32ea3fa6590565c928b90a48178b60b96df98f
+github.com/go-martini/martini	c8425257dee954ab8b116b10ded3070821bcaec6
 github.com/martini-contrib/render	b65063311fac6cbf84d3538f5715f7847e648322
+github.com/martini-contrib/binding	1928ed2850e7d65507ea4198d935597e43612c7d
 github.com/onsi/ginkgo	75d0cd9c7ee52e99b13e6ccfd9e58b4f92b7795e
 github.com/onsi/gomega	835b5e4242c715976b98ed6bc6ece1d9c7879f66

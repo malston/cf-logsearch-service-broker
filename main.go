@@ -28,6 +28,6 @@ func main() {
 		fmt.Errorf("logstash failed to start: %s", err)
 	}
 
-	logstashBroker := api.New(&logstash.ServiceBroker{})
+	logstashBroker := api.New(&logstash.ServiceBroker{}, logger)
 	logstashBroker.Run()
 }

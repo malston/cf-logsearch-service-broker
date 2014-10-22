@@ -1,6 +1,7 @@
 github.com/pivotal-golang/lager origin/master
 github.com/cloudfoundry-incubator/cf-lager origin/master
-github.com/codegangsta/martini origin/master
+github.com/go-martini/martini origin/master
 github.com/martini-contrib/render origin/master
+github.com/martini-contrib/binding origin/master
 github.com/onsi/ginkgo origin/master
 github.com/onsi/gomega origin/master

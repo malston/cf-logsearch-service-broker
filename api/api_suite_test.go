@@ -5,6 +5,7 @@ import (
 	"github.com/malston/cf-logsearch-broker/api"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/pivotal-golang/lager/lagertest"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -40,7 +41,7 @@ func Fixture(name string) string {
 }
 
 func makeRequest(method string, route string, username string, password string, broker api.ServiceBroker) *httptest.ResponseRecorder {
-	m := api.New(broker)
+	m := api.New(broker, lagertest.NewTestLogger("service-broker-test"))
 	request, _ := http.NewRequest(method, route, nil)
 	if username != "" {
 		request.SetBasicAuth(username, password)

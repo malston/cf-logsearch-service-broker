@@ -13,24 +13,24 @@ type FakeServiceBroker struct {
 	ServiceBroker
 }
 
-func (fsb *FakeServiceBroker) Services() []Service {
+func (fsb *FakeServiceBroker) GetCatalog() []Service {
 	return []Service{
 		Service{
-			ID:          "124b3b9f-89b5-4ee0-b299-850a47c4a30d",
+			Id:          "124b3b9f-89b5-4ee0-b299-850a47c4a30d",
 			Name:        "logsearch-service",
 			Description: "Logsearch Service for Cloud Foundry v2",
 			Bindable:    true,
-			DashboardClient: ServiceDashboardClient{
-				ID:          "logsearch-service-client",
+			DashboardClient: DashboardClient{
+				Id:          "logsearch-service-client",
 				Secret:      "s3cr3t",
 				RedirectUri: "https://dashboard.com",
 			},
-			Plans: []ServicePlan{
-				ServicePlan{
-					ID:          "dc851bfa-b23c-4e07-ae4d-26a5c403ce97",
+			Plans: []Plan{
+				Plan{
+					Id:          "dc851bfa-b23c-4e07-ae4d-26a5c403ce97",
 					Name:        "default",
 					Description: "The default Logsearch plan",
-					Metadata: ServicePlanMetadata{
+					Metadata: PlanMetadata{
 						Bullets:     []string{},
 						DisplayName: "Logsearch",
 					},
