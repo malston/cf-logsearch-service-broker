@@ -61,9 +61,9 @@ var _ = Describe("service broker api", func() {
 	var (
 		fakeServiceBroker *FakeServiceBroker
 	)
-	Describe("fetching catalog", func() {
+	Describe("a logsearch catalog", func() {
 		BeforeEach(func() {
-			fakeServiceBroker = &FakeServiceBroker{}
+			fakeServiceBroker = new(FakeServiceBroker)
 			os.Setenv("LOGSEARCH_BROKER_USERNAME", "username")
 			os.Setenv("LOGSEARCH_BROKER_PASSWORD", "password")
 		})
@@ -71,7 +71,7 @@ var _ = Describe("service broker api", func() {
 			os.Setenv("LOGSEARCH_BROKER_USERNAME", "")
 			os.Setenv("LOGSEARCH_BROKER_PASSWORD", "")
 		})
-		Context("when service is available", func() {
+		Context("when catalog is fetched with valid credentials", func() {
 			It("returns a 200 status code", func() {
 				response := AuthorizedRequest("GET", "/v2/catalog", fakeServiceBroker)
 				Expect(response.Code).To(Equal(200))
@@ -81,7 +81,7 @@ var _ = Describe("service broker api", func() {
 				Expect(response.Body).To(MatchJSON(Fixture("catalog.json")))
 			})
 		})
-		Context("when credentials are wrong", func() {
+		Context("when catalog is fetched with invalid credentials", func() {
 			It("returns a 401 status code", func() {
 				response := Request("GET", "/v2/catalog", "badusername", "badpassword", fakeServiceBroker)
 				Expect(response.Code).To(Equal(http.StatusUnauthorized))
