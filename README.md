@@ -6,7 +6,7 @@ A [Cloud Foundry](http://docs.cloudfoundry.org/services/api.html) service broker
 
 ```
 go get github.com/malston/cf-logsearch-service-broker
-gocart
+godep get
 ```
 
 ## Running tests
