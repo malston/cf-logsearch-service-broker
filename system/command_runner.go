@@ -19,5 +19,5 @@ type OSCommandRunner struct {
 func (runner OSCommandRunner) Run(name string, args ...string) error {
 	cmd := exec.Command(name, args...)
 	runner.Logger.Info(fmt.Sprint(name, " ", strings.Join(args, " ")))
-	return cmd.Run()
+	return cmd.Start()
 }

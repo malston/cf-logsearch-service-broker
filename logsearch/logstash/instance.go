@@ -5,23 +5,36 @@ import (
 )
 
 type Instance struct {
+	Id       string
 	Basepath string
+	ConfPath string
+	LogDir   string
+	Host     string
+	Port     int
 }
 
 func (instance Instance) CommandArgs() []string {
-	configFile := instance.ConfigPath()
+	// port := strconv.Itoa(instance.Port)
 	return []string{
-		"agent", "--verbose",
-		"-f", configFile,
+		"agent",
+		"--debug",
+		"-f", instance.ConfigPath(),
+		"-l", instance.LogFilePath(),
+		"-w", "2",
+		// "-a", instance.Host,
+		// "-p", port,
+		// "--pidfile", instance.PidFilePath(),
+		// ">>" + instance.LogFilePath(),
+		// "2>>" + instance.LogFilePath(),
 	}
 }
 
-func (instance Instance) PidFilePath() string {
-	return path.Join(instance.baseDir(), "logstash.pid")
+func (instance Instance) ConfigPath() string {
+	return path.Join(instance.ConfPath, "logstash.conf")
 }
 
-func (instance Instance) ConfigPath() string {
-	return path.Join(instance.baseDir(), "sample.conf")
+func (instance Instance) LogFilePath() string {
+	return path.Join(instance.LogDir, "logstash.stdout.log")
 }
 
 func (instance Instance) baseDir() string {

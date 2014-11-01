@@ -1,0 +1,7 @@
+---
+logstash:
+  host: "127.0.0.1"
+  conf_path: "logsearch/logstash/assets"
+  data_directory: "tmp/logstash-data"
+  log_directory: "tmp/logstash-logs"
+  service_instance_limit: 2

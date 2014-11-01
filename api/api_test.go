@@ -57,6 +57,10 @@ func (fsb *FakeServiceBroker) GetCatalog() []Service {
 	}
 }
 
+func (fsb *FakeServiceBroker) Provision(instanceId string, _ map[string]string) (string, error) {
+	return "http://locahost/dashboard/instances/" + instanceId, nil
+}
+
 var _ = Describe("service broker api", func() {
 	var (
 		fakeServiceBroker *FakeServiceBroker

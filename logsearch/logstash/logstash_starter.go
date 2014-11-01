@@ -2,6 +2,7 @@ package logstash
 
 import (
 	"github.com/malston/cf-logsearch-broker/system"
+	"log"
 )
 
 type Starter interface {
@@ -19,9 +20,9 @@ func NewProcessStarter(commmandRunner system.CommandRunner) Starter {
 }
 
 func (starter ProcessStarter) Start(instance *Instance) error {
-	// execute : bin/logstash agent --verbose -f sample.conf
 	err := starter.commandRunner.Run("logstash", instance.CommandArgs()...)
 	if err != nil {
+		log.Printf("logstash failed to start: %s", err)
 		return err
 	}
 
