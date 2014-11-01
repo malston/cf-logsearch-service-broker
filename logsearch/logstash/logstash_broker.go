@@ -13,7 +13,6 @@ type LogstashServiceBroker struct {
 	ServiceConfiguration ServiceConfiguration
 	InstanceRepository   InstanceRepository
 	ServiceInstanceLimit int
-	Repo                 InstanceRepository
 	Logger               lager.Logger
 }
 
@@ -106,7 +105,6 @@ func NewServiceBroker(brokerLogger lager.Logger) *LogstashServiceBroker {
 		},
 		InstanceRepository:   repo,
 		ServiceInstanceLimit: config.ServiceConfiguration.ServiceInstanceLimit,
-		Repo:                 repo,
 		Logger:               brokerLogger,
 	}
 }
@@ -161,7 +159,7 @@ func (broker *LogstashServiceBroker) buildInstance(instanceId string) (*Instance
 
 func (broker *LogstashServiceBroker) BindInstance(instanceId, bindingId string) (interface{}, error) {
 	log.Printf("BINDING INSTANCE--------------------------------------------------")
-	instance, err := broker.Repo.FindById(instanceId)
+	instance, err := broker.InstanceRepository.FindById(instanceId)
 	if err != nil {
 		return nil, ServiceInstanceDoesNotExistsError
 	}
