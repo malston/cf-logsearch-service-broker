@@ -1,6 +1,7 @@
 package logstash
 
 import (
+	"github.com/karlseguin/gerb"
 	"io/ioutil"
 	"log"
 	"os"
@@ -8,6 +9,7 @@ import (
 )
 
 type InstanceRepository interface {
+	CreateConfig(templateFile, outputFile string) error
 	CreateInstanceDirectories(instance *Instance) error
 	FindById(instanceID string) (*Instance, error)
 	GetInstanceCount() (int, error)
@@ -15,6 +17,11 @@ type InstanceRepository interface {
 
 type FileSystemInstanceRepository struct {
 	LogstashConf ServiceConfiguration
+}
+
+type ConfigFile struct {
+	Host string
+	Port int
 }
 
 func (instanceRepository *FileSystemInstanceRepository) CreateInstanceDirectories(instance *Instance) error {
@@ -100,6 +107,25 @@ func (instanceRepository *FileSystemInstanceRepository) findAllInstances() ([]*I
 	}
 
 	return instances, nil
+}
+
+func (instanceRepository *FileSystemInstanceRepository) CreateConfig(templateFile, outputFile string) error {
+
+	data := map[string]interface{}{
+		"logstash": map[string]interface{}{"Host": "127.0.0.1", "Port": 5514},
+	}
+
+	f, err := os.Create(outputFile)
+	defer f.Close()
+
+	tc, err := gerb.ParseFile(true, templateFile)
+	if err != nil {
+		log.Println("executing template:", err)
+		return err
+	}
+	tc.Render(f, data)
+
+	return nil
 }
 
 func (instanceRepository *FileSystemInstanceRepository) GetInstanceCount() (int, error) {

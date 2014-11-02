@@ -1,0 +1,16 @@
+input { 
+	tcp {
+		host => "<%= logstash["Host"] %>"
+		port => "<%= logstash["Port"]  %>"
+	}
+	udp {
+		host => "<%= logstash["Host"] %>"
+		port => "<%= logstash["Port"]  %>"
+	}
+} 
+
+output { 
+    stdout {
+        codec => "json"
+    }
+}

@@ -135,6 +135,13 @@ func (broker *LogstashServiceBroker) CreateInstance(instanceId string) (string, 
 		return "", err
 	}
 
+	err = broker.InstanceRepository.CreateConfig(
+		path.Join(instance.TempatePath(), "logstash.conf.tmpl"),
+		path.Join(instance.DataFilePath(), "logstash.conf"))
+	if err != nil {
+		return "", err
+	}
+
 	err = broker.ProcessController.StartAndWait(instance, 3.0)
 	if err != nil {
 		return "", err
@@ -146,12 +153,12 @@ func (broker *LogstashServiceBroker) CreateInstance(instanceId string) (string, 
 func (broker *LogstashServiceBroker) buildInstance(instanceId string) (*Instance, error) {
 
 	instance := &Instance{
-		Id:       instanceId,
-		Basepath: path.Join(broker.ServiceConfiguration.InstanceDataDirectory, instanceId),
-		LogDir:   path.Join(broker.ServiceConfiguration.InstanceLogDirectory, instanceId),
-		ConfPath: broker.ServiceConfiguration.DefaultConfigPath,
-		Port:     5512,
-		Host:     broker.ServiceConfiguration.Host,
+		Id:           instanceId,
+		Basepath:     path.Join(broker.ServiceConfiguration.InstanceDataDirectory, instanceId),
+		LogDir:       path.Join(broker.ServiceConfiguration.InstanceLogDirectory, instanceId),
+		TemplatePath: broker.ServiceConfiguration.DefaultConfigPath,
+		Port:         5512,
+		Host:         broker.ServiceConfiguration.Host,
 	}
 
 	return instance, nil

@@ -24,6 +24,18 @@
 			"Rev": "c8425257dee954ab8b116b10ded3070821bcaec6"
 		},
 		{
+			"ImportPath": "github.com/karlseguin/bytepool",
+			"Rev": "98338bb3cb40f0729ada3382790bd49aade9f0ea"
+		},
+		{
+			"ImportPath": "github.com/karlseguin/ccache",
+			"Rev": "a81a0f665c7d636cfcfb3dab7946844c999869bc"
+		},
+		{
+			"ImportPath": "github.com/karlseguin/gerb",
+			"Rev": "a17d059b99101affaae0ce764607b7de14d59a61"
+		},
+		{
 			"ImportPath": "github.com/martini-contrib/binding",
 			"Rev": "1928ed2850e7d65507ea4198d935597e43612c7d"
 		},
