@@ -136,6 +136,7 @@ func (broker *LogstashServiceBroker) CreateInstance(instanceId string) (string, 
 	}
 
 	err = broker.InstanceRepository.CreateConfig(
+		map[string]interface{}{"Host": instance.Host, "Port": instance.Port},
 		path.Join(instance.TempatePath(), "logstash.conf.tmpl"),
 		path.Join(instance.DataFilePath(), "logstash.conf"))
 	if err != nil {

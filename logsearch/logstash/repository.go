@@ -9,7 +9,7 @@ import (
 )
 
 type InstanceRepository interface {
-	CreateConfig(templateFile, outputFile string) error
+	CreateConfig(logstashConf map[string]interface{}, templateFile, outputFile string) error
 	CreateInstanceDirectories(instance *Instance) error
 	FindById(instanceID string) (*Instance, error)
 	GetInstanceCount() (int, error)
@@ -109,10 +109,10 @@ func (instanceRepository *FileSystemInstanceRepository) findAllInstances() ([]*I
 	return instances, nil
 }
 
-func (instanceRepository *FileSystemInstanceRepository) CreateConfig(templateFile, outputFile string) error {
+func (instanceRepository *FileSystemInstanceRepository) CreateConfig(logstashConf map[string]interface{}, templateFile, outputFile string) error {
 
 	data := map[string]interface{}{
-		"logstash": map[string]interface{}{"Host": "127.0.0.1", "Port": 5514},
+		"logstash": logstashConf,
 	}
 
 	f, err := os.Create(outputFile)
