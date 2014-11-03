@@ -14,6 +14,7 @@ type LogstashServiceBroker struct {
 	InstanceRepository   InstanceRepository
 	ServiceInstanceLimit int
 	Logger               lager.Logger
+	FindFreePort         func() (int, error)
 }
 
 func (broker *LogstashServiceBroker) GetCatalog() []Service {
@@ -106,6 +107,7 @@ func NewServiceBroker(brokerLogger lager.Logger) *LogstashServiceBroker {
 		InstanceRepository:   repo,
 		ServiceInstanceLimit: config.ServiceConfiguration.ServiceInstanceLimit,
 		Logger:               brokerLogger,
+		FindFreePort:         system.FindFreePort,
 	}
 }
 
@@ -152,13 +154,17 @@ func (broker *LogstashServiceBroker) CreateInstance(instanceId string) (string, 
 }
 
 func (broker *LogstashServiceBroker) buildInstance(instanceId string) (*Instance, error) {
+	port, err := broker.FindFreePort()
+	if err != nil {
+		return nil, err
+	}
 
 	instance := &Instance{
 		Id:           instanceId,
 		Basepath:     path.Join(broker.ServiceConfiguration.InstanceDataDirectory, instanceId),
 		LogDir:       path.Join(broker.ServiceConfiguration.InstanceLogDirectory, instanceId),
 		TemplatePath: broker.ServiceConfiguration.DefaultConfigPath,
-		Port:         5512,
+		Port:         port,
 		Host:         broker.ServiceConfiguration.Host,
 	}
 
