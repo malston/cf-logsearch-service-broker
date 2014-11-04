@@ -1,16 +1,17 @@
 input { 
 	tcp {
-		host => "<%= logstash["Host"] %>"
 		port => "<%= logstash["Port"]  %>"
+		type => syslog
 	}
+	
 	udp {
-		host => "<%= logstash["Host"] %>"
 		port => "<%= logstash["Port"]  %>"
+		type => syslog
 	}
 } 
 
 output { 
-    stdout {
-        codec => "json"
-    }
+	stdout {
+		codec => rubydebug
+	}
 }

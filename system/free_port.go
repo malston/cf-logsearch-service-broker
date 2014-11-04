@@ -13,10 +13,10 @@ func FindFreePort() (int, error) {
 
 	fmt.Fprintf(os.Stdout, "Listening for tcp traffic on %q", ln.Addr().String())
 
-	parsedPort, parseErr := strconv.ParseInt(ln.Addr().String()[5:], 10, 32)
-	if parseErr != nil {
-		return -1, parseErr
+	port, err := strconv.ParseInt(ln.Addr().String()[5:], 10, 32)
+	if err != nil {
+		return -1, err
 	}
 
-	return int(parsedPort), nil
+	return int(port), nil
 }
