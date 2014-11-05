@@ -1,4 +1,4 @@
-package main
+package logsearch
 
 import (
 	"github.com/cloudfoundry-incubator/cf-lager"
