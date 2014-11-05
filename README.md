@@ -31,3 +31,10 @@ All `go` packages required to run the broker are vendored into the `Godeps` dire
 
 When making changes to the code that requires additional `go` packages, you should use the workflow described in the
 [Add or Update a Dependency](https://github.com/tools/godep#add-a-dependency) section of the godep documentation.
+
+## Debugging
+
+Turn on debug logging by setting the logLevel flag to `debug`
+```
+bin/broker -logLevel=debug
+```
