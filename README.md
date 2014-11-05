@@ -6,11 +6,28 @@ A [Cloud Foundry](http://docs.cloudfoundry.org/services/api.html) service broker
 
 ```
 go get github.com/malston/cf-logsearch-service-broker
-godep get
+cd $GOPATH/src/github.com/malston/cf-logsearch-service-broker && godep get
+```
+
+## Build & Run
+
+```
+go build -o bin/broker main.go
+bin/broker
 ```
 
 ## Running tests
 
 ```
-ginkgo -r --randomizeAllSpecs --failOnPending --trace --race
+ginkgo -r --randomizeAllSpecs --failOnPending --skipMeasurements --trace --race  --cover
 ```
+
+## Development
+
+The `cf-logsearch-broker`
+ uses [godep](https://github.com/tools/godep) to manage `go` dependencies.
+
+All `go` packages required to run the broker are vendored into the `Godeps` directory.
+
+When making changes to the code that requires additional `go` packages, you should use the workflow described in the
+[Add or Update a Dependency](https://github.com/tools/godep#add-a-dependency) section of the godep documentation.

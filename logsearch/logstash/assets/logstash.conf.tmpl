@@ -1,4 +1,4 @@
-input { 
+input {
 	tcp {
 		port => "<%= logstash["Port"]  %>"
 		type => syslog
@@ -8,7 +8,7 @@ input {
 		port => "<%= logstash["Port"]  %>"
 		type => syslog
 	}
-} 
+}
 
 filter {
 	if [type] == "syslog" {
@@ -36,7 +36,7 @@ filter {
 	}
 }
 
-output { 
+output {
 	stdout {
 		codec => rubydebug
 	}
