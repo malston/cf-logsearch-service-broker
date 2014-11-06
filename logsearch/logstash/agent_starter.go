@@ -5,21 +5,18 @@ import (
 	"log"
 )
 
-type Starter interface {
-	Start(instance *Instance) error
-}
-
-type ProcessStarter struct {
+// logstashAgentStarter implements the ProcessStarter interface.
+type logstashAgentStarter struct {
 	commandRunner system.CommandRunner
 }
 
-func NewProcessStarter(commmandRunner system.CommandRunner) Starter {
-	return ProcessStarter{
+func NewProcessStarter(commmandRunner system.CommandRunner) ProcessStarter {
+	return logstashAgentStarter{
 		commandRunner: commmandRunner,
 	}
 }
 
-func (starter ProcessStarter) Start(instance *Instance) error {
+func (starter logstashAgentStarter) Start(instance *Instance) error {
 	err := starter.commandRunner.Run("logstash", instance.CommandArgs()...)
 	if err != nil {
 		log.Printf("logstash failed to start: %s", err)

@@ -12,7 +12,7 @@ cd $GOPATH/src/github.com/malston/cf-logsearch-service-broker && godep get
 ## Build & Run
 
 ```
-go build -o bin/broker logsearch/broker.go
+go build -o bin/broker logsearch/broker_exec.go
 bin/broker
 ```
 

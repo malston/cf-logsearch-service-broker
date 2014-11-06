@@ -6,17 +6,13 @@ import (
 	"github.com/pivotal-golang/lager"
 )
 
-type ProcessController interface {
-	Starter
-	StartAndWait(instance *Instance, timeout float64) error
-}
-
-type OSProcessController struct {
-	Starter
+// logstashProcessController implements the ProcessController interface.
+type logstashProcessController struct {
+	ProcessStarter
 	Logger lager.Logger
 }
 
-func (controller *OSProcessController) StartAndWait(instance *Instance, timeout float64) error {
+func (controller *logstashProcessController) StartAndWait(instance *Instance, timeout float64) error {
 	controller.Logger.Info("Starting logstash process")
 	err := controller.Start(instance)
 	if err != nil {

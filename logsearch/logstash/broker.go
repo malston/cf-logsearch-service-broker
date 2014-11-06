@@ -8,7 +8,8 @@ import (
 	"path"
 )
 
-type LogstashServiceBroker struct {
+// logstashServiceBroker implements the api.ServiceBroker interface.
+type logstashServiceBroker struct {
 	ProcessController    ProcessController
 	ServiceConfiguration ServiceConfiguration
 	InstanceRepository   InstanceRepository
@@ -17,7 +18,16 @@ type LogstashServiceBroker struct {
 	FindFreePort         func() (int, error)
 }
 
-func (broker *LogstashServiceBroker) GetCatalog() []Service {
+type ProcessStarter interface {
+	Start(instance *Instance) error
+}
+
+type ProcessController interface {
+	ProcessStarter
+	StartAndWait(instance *Instance, timeout float64) error
+}
+
+func (broker *logstashServiceBroker) GetCatalog() []Service {
 	return []Service{
 		Service{
 			Id:          "124b3b9f-89b5-4ee0-b299-850a47c4a30d",
@@ -61,23 +71,23 @@ func (broker *LogstashServiceBroker) GetCatalog() []Service {
 	}
 }
 
-func (broker *LogstashServiceBroker) Provision(instanceId string, params map[string]string) (string, error) {
+func (broker *logstashServiceBroker) Provision(instanceId string, params map[string]string) (string, error) {
 	return broker.CreateInstance(instanceId)
 }
 
-func (broker *LogstashServiceBroker) Bind(instanceId string, bindingId string) (interface{}, error) {
+func (broker *logstashServiceBroker) Bind(instanceId string, bindingId string) (interface{}, error) {
 	return broker.BindInstance(instanceId, bindingId)
 }
 
-func (broker *LogstashServiceBroker) Unbind(instanceId string, bindingId string) error {
+func (broker *logstashServiceBroker) Unbind(instanceId string, bindingId string) error {
 	return nil
 }
 
-func (broker *LogstashServiceBroker) Deprovision(instanceId string) error {
+func (broker *logstashServiceBroker) Deprovision(instanceId string) error {
 	return nil
 }
 
-func NewServiceBroker(brokerLogger lager.Logger) *LogstashServiceBroker {
+func NewServiceBroker(brokerLogger lager.Logger) *logstashServiceBroker {
 	brokerConfigPath := ConfigPath()
 	config, err := ParseConfig(brokerConfigPath)
 	if err != nil {
@@ -98,11 +108,11 @@ func NewServiceBroker(brokerLogger lager.Logger) *LogstashServiceBroker {
 		brokerLogger,
 	}
 
-	return &LogstashServiceBroker{
+	return &logstashServiceBroker{
 		ServiceConfiguration: config.ServiceConfiguration,
-		ProcessController: &OSProcessController{
-			Starter: NewProcessStarter(commandRunner),
-			Logger:  brokerLogger,
+		ProcessController: &logstashProcessController{
+			ProcessStarter: NewProcessStarter(commandRunner),
+			Logger:         brokerLogger,
 		},
 		InstanceRepository:   repo,
 		ServiceInstanceLimit: config.ServiceConfiguration.ServiceInstanceLimit,
@@ -111,7 +121,7 @@ func NewServiceBroker(brokerLogger lager.Logger) *LogstashServiceBroker {
 	}
 }
 
-func (broker *LogstashServiceBroker) CreateInstance(instanceId string) (string, error) {
+func (broker *logstashServiceBroker) CreateInstance(instanceId string) (string, error) {
 	log.Printf("CREATING INSTANCE--------------------------------------------------")
 
 	instanceCount, err := broker.InstanceRepository.GetInstanceCount()
@@ -153,7 +163,7 @@ func (broker *LogstashServiceBroker) CreateInstance(instanceId string) (string, 
 	return "http://locahost/dashboard/instances/" + instanceId, nil
 }
 
-func (broker *LogstashServiceBroker) buildInstance(instanceId string) (*Instance, error) {
+func (broker *logstashServiceBroker) buildInstance(instanceId string) (*Instance, error) {
 	port, err := broker.FindFreePort()
 	if err != nil {
 		return nil, err
@@ -171,7 +181,7 @@ func (broker *LogstashServiceBroker) buildInstance(instanceId string) (*Instance
 	return instance, nil
 }
 
-func (broker *LogstashServiceBroker) BindInstance(instanceId, bindingId string) (interface{}, error) {
+func (broker *logstashServiceBroker) BindInstance(instanceId, bindingId string) (interface{}, error) {
 	log.Printf("BINDING INSTANCE--------------------------------------------------")
 	instance, err := broker.InstanceRepository.FindById(instanceId)
 	if err != nil {

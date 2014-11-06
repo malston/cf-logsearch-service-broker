@@ -132,12 +132,3 @@ func (instanceRepository *FileSystemInstanceRepository) GetInstanceCount() (int,
 	instances, err := instanceRepository.findAllInstances()
 	return len(instances), err
 }
-
-func fileExists(path string) bool {
-	if _, err := os.Stat(path); err != nil {
-		if os.IsNotExist(err) {
-			return false
-		}
-	}
-	return true
-}

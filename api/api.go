@@ -49,77 +49,78 @@ var (
 	ServiceInstanceBindingAlreadyExistsError = errors.New("binding already exists")
 )
 
-type Service struct {
-	Id              string          `json:"id"`
-	Name            string          `json:"name"`
-	Description     string          `json:"description"`
-	Bindable        bool            `json:"bindable"`
-	Plans           []Plan          `json:"plans"`
-	Metadata        ServiceMetadata `json:"metadata,omitempty"`
-	Tags            []string        `json:"tags,omitempty"`
-	DashboardClient DashboardClient `json:"dashboard_client"`
-}
+type (
+	Service struct {
+		Id              string          `json:"id"`
+		Name            string          `json:"name"`
+		Description     string          `json:"description"`
+		Bindable        bool            `json:"bindable"`
+		Plans           []Plan          `json:"plans"`
+		Metadata        ServiceMetadata `json:"metadata,omitempty"`
+		Tags            []string        `json:"tags,omitempty"`
+		DashboardClient DashboardClient `json:"dashboard_client"`
+	}
+	Plan struct {
+		Id          string       `json:"id"`
+		Name        string       `json:"name"`
+		Description string       `json:"description"`
+		Metadata    PlanMetadata `json:"metadata,omitempty"`
+	}
 
-type Plan struct {
-	Id          string       `json:"id"`
-	Name        string       `json:"name"`
-	Description string       `json:"description"`
-	Metadata    PlanMetadata `json:"metadata,omitempty"`
-}
+	PlanMetadata struct {
+		Bullets     []string `json:"bullets"`
+		DisplayName string   `json:"displayName"`
+	}
 
-type PlanMetadata struct {
-	Bullets     []string `json:"bullets"`
-	DisplayName string   `json:"displayName"`
-}
+	ServiceMetadata struct {
+		DisplayName      string                  `json:"displayName"`
+		LongDescription  string                  `json:"longDescription"`
+		DocumentationUrl string                  `json:"documentationUrl"`
+		SupportUrl       string                  `json:"supportUrl"`
+		Listing          ServiceMetadataListing  `json:"listing"`
+		Provider         ServiceMetadataProvider `json:"provider"`
+	}
 
-type ServiceMetadata struct {
-	DisplayName      string                  `json:"displayName"`
-	LongDescription  string                  `json:"longDescription"`
-	DocumentationUrl string                  `json:"documentationUrl"`
-	SupportUrl       string                  `json:"supportUrl"`
-	Listing          ServiceMetadataListing  `json:"listing"`
-	Provider         ServiceMetadataProvider `json:"provider"`
-}
+	ServiceMetadataListing struct {
+		Blurb    string `json:"blurb"`
+		ImageUrl string `json:"imageUrl"`
+	}
 
-type ServiceMetadataListing struct {
-	Blurb    string `json:"blurb"`
-	ImageUrl string `json:"imageUrl"`
-}
+	ServiceMetadataProvider struct {
+		Name string `json:"name"`
+	}
 
-type ServiceMetadataProvider struct {
-	Name string `json:"name"`
-}
+	DashboardClient struct {
+		Id          string `json:"id"`
+		Secret      string `json:"secret"`
+		RedirectUri string `json:"redirect_uri"`
+	}
 
-type DashboardClient struct {
-	Id          string `json:"id"`
-	Secret      string `json:"secret"`
-	RedirectUri string `json:"redirect_uri"`
-}
+	ProvisionRequest struct {
+		ServiceId        string `json:"service_id"`
+		PlanId           string `json:"plan_id"`
+		OrganizationGuid string `json:"organization_guid"`
+		SpaceGuid        string `json:"space_guid"`
+	}
 
-type ProvisionRequest struct {
-	ServiceId        string `json:"service_id"`
-	PlanId           string `json:"plan_id"`
-	OrganizationGuid string `json:"organization_guid"`
-	SpaceGuid        string `json:"space_guid"`
-}
+	EmptyResponse struct{}
 
-type EmptyResponse struct{}
+	ErrorResponse struct {
+		Description string `json:"description"`
+	}
 
-type ErrorResponse struct {
-	Description string `json:"description"`
-}
+	CatalogResponse struct {
+		Services []Service `json:"services"`
+	}
 
-type CatalogResponse struct {
-	Services []Service `json:"services"`
-}
+	ProvisionResponse struct {
+		DashboardUrl string `json:"dashboard_url,omitempty"`
+	}
 
-type ProvisionResponse struct {
-	DashboardUrl string `json:"dashboard_url,omitempty"`
-}
-
-type BindingResponse struct {
-	Credentials interface{} `json:"credentials"`
-}
+	BindingResponse struct {
+		Credentials interface{} `json:"credentials"`
+	}
+)
 
 // Creates v2 service broker api for a given broker
 func New(serviceBroker ServiceBroker, logger lager.Logger) *martini.ClassicMartini {
