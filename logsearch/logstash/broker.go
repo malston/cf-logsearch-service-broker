@@ -27,6 +27,40 @@ type ProcessController interface {
 	StartAndWait(instance *Instance, timeout float64) error
 }
 
+func NewServiceBroker(brokerLogger lager.Logger) *logstashServiceBroker {
+	brokerConfigPath := ConfigPath()
+	config, err := ParseConfig(brokerConfigPath)
+	if err != nil {
+		brokerLogger.Fatal("Loading config file", err, lager.Data{
+			"broker-config-path": brokerConfigPath,
+		})
+	}
+
+	if err = CheckConfig(config.ServiceConfiguration); err != nil {
+		brokerLogger.Fatal("Checking config file", err)
+	}
+
+	repo := &FileSystemInstanceRepository{
+		LogstashConf: config.ServiceConfiguration,
+	}
+
+	commandRunner := system.OSCommandRunner{
+		brokerLogger,
+	}
+
+	return &logstashServiceBroker{
+		ServiceConfiguration: config.ServiceConfiguration,
+		ProcessController: &logstashProcessController{
+			ProcessStarter: NewProcessStarter(commandRunner),
+			Logger:         brokerLogger,
+		},
+		InstanceRepository:   repo,
+		ServiceInstanceLimit: config.ServiceConfiguration.ServiceInstanceLimit,
+		Logger:               brokerLogger,
+		FindFreePort:         system.FindFreePort,
+	}
+}
+
 func (broker *logstashServiceBroker) GetCatalog() []Service {
 	return []Service{
 		Service{
@@ -72,56 +106,6 @@ func (broker *logstashServiceBroker) GetCatalog() []Service {
 }
 
 func (broker *logstashServiceBroker) Provision(instanceId string, params map[string]string) (string, error) {
-	return broker.CreateInstance(instanceId)
-}
-
-func (broker *logstashServiceBroker) Bind(instanceId string, bindingId string) (interface{}, error) {
-	return broker.BindInstance(instanceId, bindingId)
-}
-
-func (broker *logstashServiceBroker) Unbind(instanceId string, bindingId string) error {
-	return nil
-}
-
-func (broker *logstashServiceBroker) Deprovision(instanceId string) error {
-	return nil
-}
-
-func NewServiceBroker(brokerLogger lager.Logger) *logstashServiceBroker {
-	brokerConfigPath := ConfigPath()
-	config, err := ParseConfig(brokerConfigPath)
-	if err != nil {
-		brokerLogger.Fatal("Loading config file", err, lager.Data{
-			"broker-config-path": brokerConfigPath,
-		})
-	}
-
-	if err = CheckConfig(config.ServiceConfiguration); err != nil {
-		brokerLogger.Fatal("Checking config file", err)
-	}
-
-	repo := &FileSystemInstanceRepository{
-		LogstashConf: config.ServiceConfiguration,
-	}
-
-	commandRunner := system.OSCommandRunner{
-		brokerLogger,
-	}
-
-	return &logstashServiceBroker{
-		ServiceConfiguration: config.ServiceConfiguration,
-		ProcessController: &logstashProcessController{
-			ProcessStarter: NewProcessStarter(commandRunner),
-			Logger:         brokerLogger,
-		},
-		InstanceRepository:   repo,
-		ServiceInstanceLimit: config.ServiceConfiguration.ServiceInstanceLimit,
-		Logger:               brokerLogger,
-		FindFreePort:         system.FindFreePort,
-	}
-}
-
-func (broker *logstashServiceBroker) CreateInstance(instanceId string) (string, error) {
 	log.Printf("CREATING INSTANCE--------------------------------------------------")
 
 	instanceCount, err := broker.InstanceRepository.GetInstanceCount()
@@ -142,15 +126,7 @@ func (broker *logstashServiceBroker) CreateInstance(instanceId string) (string, 
 		return "", err
 	}
 
-	err = broker.InstanceRepository.CreateInstanceDirectories(instance)
-	if err != nil {
-		return "", err
-	}
-
-	err = broker.InstanceRepository.CreateConfig(
-		map[string]interface{}{"Host": instance.Host, "Port": instance.Port},
-		path.Join(instance.TempatePath(), "logstash.conf.tmpl"),
-		path.Join(instance.DataFilePath(), "logstash.conf"))
+	err = broker.InstanceRepository.Save(instance)
 	if err != nil {
 		return "", err
 	}
@@ -161,6 +137,30 @@ func (broker *logstashServiceBroker) CreateInstance(instanceId string) (string, 
 	}
 
 	return "http://locahost/dashboard/instances/" + instanceId, nil
+}
+
+func (broker *logstashServiceBroker) Bind(instanceId string, bindingId string) (interface{}, error) {
+	log.Printf("BINDING INSTANCE--------------------------------------------------")
+	instance, err := broker.InstanceRepository.FindById(instanceId)
+	if err != nil {
+		return nil, ServiceInstanceDoesNotExistsError
+	}
+
+	return struct {
+		Host string `json:"host"`
+		Port int    `json:"port"`
+	}{
+		Host: instance.Host,
+		Port: instance.Port,
+	}, nil
+}
+
+func (broker *logstashServiceBroker) Unbind(instanceId string, bindingId string) error {
+	return nil
+}
+
+func (broker *logstashServiceBroker) Deprovision(instanceId string) error {
+	return nil
 }
 
 func (broker *logstashServiceBroker) buildInstance(instanceId string) (*Instance, error) {
@@ -179,20 +179,4 @@ func (broker *logstashServiceBroker) buildInstance(instanceId string) (*Instance
 	}
 
 	return instance, nil
-}
-
-func (broker *logstashServiceBroker) BindInstance(instanceId, bindingId string) (interface{}, error) {
-	log.Printf("BINDING INSTANCE--------------------------------------------------")
-	instance, err := broker.InstanceRepository.FindById(instanceId)
-	if err != nil {
-		return nil, ServiceInstanceDoesNotExistsError
-	}
-
-	return struct {
-		Host string `json:"host"`
-		Port int    `json:"port"`
-	}{
-		Host: instance.Host,
-		Port: instance.Port,
-	}, nil
 }

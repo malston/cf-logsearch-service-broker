@@ -23,6 +23,7 @@ _testmain.go
 *.exe
 *.test
 *.prof
+*.coverprofile
 
 # bin
 bin
