@@ -43,12 +43,16 @@ func CheckConfig(config ServiceConfiguration) error {
 
 	err = checkPathExists(config.InstanceDataDirectory, "Logstash InstanceDataDirectory")
 	if err != nil {
-		return err
+		if err := os.MkdirAll(config.InstanceDataDirectory, 0777); err != nil {
+			return err
+		}
 	}
 
 	err = checkPathExists(config.InstanceLogDirectory, "Logstash InstanceLogDirectory")
 	if err != nil {
-		return err
+		if err := os.MkdirAll(config.InstanceLogDirectory, 0777); err != nil {
+			return err
+		}
 	}
 
 	return nil
