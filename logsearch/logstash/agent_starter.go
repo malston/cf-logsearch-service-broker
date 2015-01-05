@@ -1,7 +1,7 @@
 package logstash
 
 import (
-	"github.com/malston/cf-logsearch-broker/system"
+	"github.com/malston/cf-logsearch-service-broker/system"
 	"log"
 )
 

@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/cloudfoundry-incubator/cf-lager"
 
-	"github.com/malston/cf-logsearch-broker/api"
-	"github.com/malston/cf-logsearch-broker/logsearch/logstash"
+	"github.com/malston/cf-logsearch-service-broker/api"
+	"github.com/malston/cf-logsearch-service-broker/logsearch/logstash"
 )
 
 func main() {

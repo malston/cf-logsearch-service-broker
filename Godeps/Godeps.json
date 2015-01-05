@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/malston/cf-logsearch-broker",
+	"ImportPath": "github.com/malston/cf-logsearch-service-broker",
 	"GoVersion": "go1.3",
 	"Packages": [
 		"./..."

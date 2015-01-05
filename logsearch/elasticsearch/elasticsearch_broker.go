@@ -1,7 +1,7 @@
 package elasticsearch
 
 import (
-	"github.com/malston/cf-logsearch-broker/api"
+	"github.com/malston/cf-logsearch-service-broker/api"
 )
 
 type ServiceBroker struct {

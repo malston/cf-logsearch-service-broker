@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"os"
 
-	. "github.com/malston/cf-logsearch-broker/api"
+	. "github.com/malston/cf-logsearch-service-broker/api"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )

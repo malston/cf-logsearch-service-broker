@@ -2,7 +2,7 @@ package api_test
 
 import (
 	"fmt"
-	"github.com/malston/cf-logsearch-broker/api"
+	"github.com/malston/cf-logsearch-service-broker/api"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/pivotal-golang/lager/lagertest"
