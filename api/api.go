@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/go-martini/martini"
-	"github.com/malston/cf-logsearch-broker/api/handlers"
+	"github.com/malston/cf-logsearch-service-broker/api/handlers"
 	"github.com/martini-contrib/binding"
 	"github.com/martini-contrib/render"
 	"github.com/pivotal-golang/lager"

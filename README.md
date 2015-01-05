@@ -1,4 +1,4 @@
-# cf-logsearch-broker 
+# cf-logsearch-service-broker 
 
 A [Cloud Foundry](http://docs.cloudfoundry.org/services/api.html) service broker for [Logsearch](http://www.logsearch.io/).
 
@@ -24,7 +24,7 @@ ginkgo -r --randomizeAllSpecs --failOnPending --skipMeasurements --trace --race 
 
 ## Development
 
-The `cf-logsearch-broker`
+The `cf-logsearch-service-broker`
  uses [godep](https://github.com/tools/godep) to manage `go` dependencies.
 
 All `go` packages required to run the broker are vendored into the `Godeps` directory.

@@ -1,8 +1,8 @@
 package logstash
 
 import (
-	. "github.com/malston/cf-logsearch-broker/api"
-	"github.com/malston/cf-logsearch-broker/system"
+	. "github.com/malston/cf-logsearch-service-broker/api"
+	"github.com/malston/cf-logsearch-service-broker/system"
 	"github.com/pivotal-golang/lager"
 	"log"
 	"path"
