@@ -1,6 +1,7 @@
 package logstash
 
 import (
+	"fmt"
 	"path"
 	"runtime"
 	"strconv"
@@ -16,19 +17,17 @@ type Instance struct {
 }
 
 func (instance Instance) CommandArgs() []string {
-	// port := strconv.Itoa(instance.Port)
 	return []string{
 		"agent",
 		"--debug",
 		"-f", instance.ConfigPath(),
 		"-l", instance.LogFilePath(),
 		"-w", strconv.Itoa(runtime.NumCPU() / 2),
-		// "-a", instance.Host,
-		// "-p", port,
-		// "--pidfile", instance.PidFilePath(),
-		// ">>" + instance.LogFilePath(),
-		// "2>>" + instance.LogFilePath(),
 	}
+}
+
+func (instance Instance) Address() string {
+	return fmt.Sprintf("%s:%d", instance.Host, instance.Port)
 }
 
 func (instance Instance) ConfigPath() string {
