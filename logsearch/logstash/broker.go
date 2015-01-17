@@ -6,11 +6,12 @@ import (
 	"github.com/pivotal-golang/lager"
 	"log"
 	"path"
+	"time"
 )
 
 // logstashServiceBroker implements the api.ServiceBroker interface.
 type logstashServiceBroker struct {
-	ProcessController    ProcessController
+	ProcessStarter       ProcessStarter
 	ServiceConfiguration ServiceConfiguration
 	InstanceRepository   InstanceRepository
 	ServiceInstanceLimit int
@@ -19,12 +20,7 @@ type logstashServiceBroker struct {
 }
 
 type ProcessStarter interface {
-	Start(instance *Instance) error
-}
-
-type ProcessController interface {
-	ProcessStarter
-	StartAndWait(instance *Instance, timeout float64) error
+	Start(instance *Instance, timeout time.Duration) error
 }
 
 func NewServiceBroker(brokerLogger lager.Logger) *logstashServiceBroker {
@@ -50,10 +46,7 @@ func NewServiceBroker(brokerLogger lager.Logger) *logstashServiceBroker {
 
 	return &logstashServiceBroker{
 		ServiceConfiguration: config.ServiceConfiguration,
-		ProcessController: &logstashProcessController{
-			ProcessStarter: NewProcessStarter(commandRunner),
-			Logger:         brokerLogger,
-		},
+		ProcessStarter:       NewProcessStarter(commandRunner),
 		InstanceRepository:   repo,
 		ServiceInstanceLimit: config.ServiceConfiguration.ServiceInstanceLimit,
 		Logger:               brokerLogger,
@@ -131,7 +124,7 @@ func (broker *logstashServiceBroker) Provision(instanceId string, params map[str
 		return "", err
 	}
 
-	err = broker.ProcessController.StartAndWait(instance, 3.0)
+	err = broker.ProcessStarter.Start(instance, time.Duration(30)*time.Second)
 	if err != nil {
 		return "", err
 	}
